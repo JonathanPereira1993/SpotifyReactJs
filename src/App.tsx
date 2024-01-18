@@ -1,5 +1,6 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
+import {getAuth} from './Services/api/SpotifyService'
 
 function App() {
   const clientId = import.meta.env.VITE_CLIENT_ID;
@@ -12,21 +13,33 @@ function App() {
   const [artists, setArtists] = useState([]);
 
   useEffect(() => {
-    const hash = window.location.hash;
-    let token = window.localStorage.getItem("token");
+    getAuth();
+    // let token = axios.post("https://accounts.spotify.com/api/token", {
+    //   headers: {
+    //     Accept: 'application/json',
+    //     'Content-Type': "application/x-www-form-urlencoded",
+    //   },
+    //   auth: {
+    //     username: clientId,
+    //     password: secretKey
+    //   }
+    // });
 
-    if (!token && hash) {
-      token = hash
-        .substring(1)
-        .split("&")
-        .find((elem) => elem.startsWith("access_token"))
-        ?.split("=")[1];
+    console.log(token)
 
-      window.location.hash = "";
-      window.localStorage.setItem("token", token);
-    }
+    // if (!token && hash) {
+    //   token = hash
+    //     .substring(1)
+    //     .split("&")
+    //     .find((elem) => elem.startsWith("access_token"))
+    //     ?.split("=")[1];
 
-    setToken(token);
+    //   window.location.hash = "";
+    //   setToken("");
+    //   window.localStorage.setItem("token", token);
+    // }
+
+    // setToken(token);
   }, []);
 
   const renderArtists = () => {
