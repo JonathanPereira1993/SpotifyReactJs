@@ -1,58 +1,27 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
-import {getAuth} from './Services/api/SpotifyService'
+import ArtistsCard from "./components/ArtistsCard";
+import LoginPage from "./Pages/LoginPage";
+
 
 function App() {
-  const clientId = import.meta.env.VITE_CLIENT_ID;
-  const redirectURI = import.meta.env.VITE_REDIRECT_URI;
-  const authEndpoint = import.meta.env.VITE_AUTH_ENDPOINT;
-  const responseType = "token";
-
-  const [token, setToken] = useState<string>("");
+  const [token, setToken] = useState();
   const [searchKey, setSearchKey] = useState<string>("");
   const [artists, setArtists] = useState([]);
 
   useEffect(() => {
-    getAuth();
-    // let token = axios.post("https://accounts.spotify.com/api/token", {
-    //   headers: {
-    //     Accept: 'application/json',
-    //     'Content-Type': "application/x-www-form-urlencoded",
-    //   },
-    //   auth: {
-    //     username: clientId,
-    //     password: secretKey
-    //   }
-    // });
-
-    console.log(token)
-
-    // if (!token && hash) {
-    //   token = hash
-    //     .substring(1)
-    //     .split("&")
-    //     .find((elem) => elem.startsWith("access_token"))
-    //     ?.split("=")[1];
-
-    //   window.location.hash = "";
-    //   setToken("");
-    //   window.localStorage.setItem("token", token);
-    // }
-
-    // setToken(token);
   }, []);
 
   const renderArtists = () => {
     return artists.map((artist) => (
       <div key={artist.id}>
-        {artist.name} {artist.followers.total}
+        {<ArtistsCard name={artist.name} genre={artist.genres} followers={artist.followers.total}/>}
       </div>
     ));
   };
 
   const searchArtists = async (e) => {
     e.preventDefault();
-    console.log(token);
     const { data } = await axios.get("https://api.spotify.com/v1/search", {
       headers: {
         Authorization: `Bearer ${token}`,
@@ -63,18 +32,13 @@ function App() {
       },
     });
 
-    console.log(data.artists.items);
+    console.log(data.artists.items)
     setArtists(data.artists.items);
   };
 
   return (
-    <div className="m-auto flex flex-col justify-center items-center h-screen w-screen">
-      <h1>Spotify API</h1>
-      <a
-        href={`${authEndpoint}?client_id=${clientId}&redirect_uri=${redirectURI}&response_type=${responseType}`}
-      >
-        There
-      </a>
+    <div className="h-screen w-screen p-6">
+      <h1 className="text-center text-6xl mb-6">Spotify API</h1>
 
       {token ? (
         <form onSubmit={searchArtists}>
@@ -87,10 +51,10 @@ function App() {
           <button type={"submit"}>Search</button>
         </form>
       ) : (
-        <h2>Please, LogIn</h2>
+        <LoginPage />
       )}
 
-      {renderArtists()}
+      <div className="grid grid-cols-6 gap-8 mt-4">{renderArtists()}</div>
     </div>
   );
 }
