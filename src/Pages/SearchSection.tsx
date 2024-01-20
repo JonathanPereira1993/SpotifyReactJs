@@ -31,8 +31,6 @@ const SearchSection = () => {
     e.preventDefault();
     setIsLoading(true);
 
-    console.log(searchType);
-
     try {
       const { data } = await axios.get(`https://api.spotify.com/v1/search`, {
         headers: {
@@ -44,13 +42,18 @@ const SearchSection = () => {
         },
       });
 
-      console.log(data);
+      console.log(searchType);
+      console.log(searchKey);
+      console.log(artists);
       if (searchType == "artist") {
         setArtists(data.artists.items);
+        console.log(data.artist.items);
       } else if (searchType == "album") {
-        setArtists(data.albuns.items);
+        setArtists(data.albums.items);
+        console.log(data.albums.items);
       } else if (searchType == "music") {
         setArtists(data.musics.items);
+        console.log(data.musics.items);
       }
     } catch (error: any) {
       if (error) {
@@ -76,7 +79,7 @@ const SearchSection = () => {
   if (error) {
     return (
       <div className="w-screen text-red-400 text-3xl h-screen flex items-center justify-center">
-        Somethin went wrong
+        Something went wrong
       </div>
     );
   }
@@ -87,7 +90,12 @@ const SearchSection = () => {
         className="w-full flex justify-center my-8 gap-4"
         onSubmit={searchArtists}
       >
-        <select onChange={handleSearchType} name="" id="">
+        <select
+          className="border px-4 rounded-md"
+          onChange={handleSearchType}
+          name=""
+          id=""
+        >
           {searchDataType.map((type) => (
             <option key={type.name} value={type.name}>
               {type.name}
@@ -115,6 +123,7 @@ const SearchSection = () => {
               key={artist.id}
               name={artist.name}
               followers={artist.followers.total}
+              photo={artist.items.images[1].url}
             />
           ))}
         </div>
