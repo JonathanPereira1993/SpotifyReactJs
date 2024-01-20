@@ -1,4 +1,3 @@
-import axios from "axios";
 import { useState } from "react";
 import LoginPage from "./Pages/LoginPage";
 import SearchSection from "./Pages/SearchSection";
