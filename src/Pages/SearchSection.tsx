@@ -1,6 +1,5 @@
-import axios from "axios";
-import { useContext, useState } from "react";
-import { userContext } from "../Services/context/UserContext";
+import { useEffect, useState } from "react";
+import { searchCall } from "../Services/api/SpotifyService";
 
 import ArtistsCard from "../components/ArtistsCard";
 import LoadingSpinner from "../components/LoadingSpinner";
@@ -12,7 +11,7 @@ interface dataTypes {
 const SearchSection = () => {
   const [searchKey, setSearchKey] = useState<string>("");
   const [empty, setEmpty] = useState<boolean>(false);
-  const [artists, setArtists] = useState<[]>([]);
+  const [artists, setArtists] = useState<any>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<boolean>();
   const [searchType, setSearchType] = useState("artist");
@@ -20,52 +19,46 @@ const SearchSection = () => {
   const searchDataType: dataTypes[] = [
     { name: "artist" },
     { name: "album" },
-    { name: "music" },
+    { name: "track" },
   ];
 
-  // Context - Token
-  const { token } = useContext(userContext);
+  useEffect(() => {
+    setSearchType(window.localStorage.getItem("SearchType"));
+  }, []);
 
   // Search Action
   const searchArtists = async (e: { preventDefault: () => void }) => {
     e.preventDefault();
     setIsLoading(true);
 
-    try {
-      const { data } = await axios.get(`https://api.spotify.com/v1/search`, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-        params: {
-          q: searchKey,
-          type: searchType,
-        },
-      });
+    const { response, error } = await searchCall({
+      q: searchKey,
+      type: searchType,
+    });
 
-      console.log(searchType);
-      console.log(searchKey);
-      console.log(artists);
+    window.localStorage.setItem("SearchType", searchType);
+
+    if (response) {
       if (searchType == "artist") {
-        setArtists(data.artists.items);
-        console.log(data.artist.items);
+        setArtists(response.artists.items);
       } else if (searchType == "album") {
-        setArtists(data.albums.items);
-        console.log(data.albums.items);
-      } else if (searchType == "music") {
-        setArtists(data.musics.items);
-        console.log(data.musics.items);
-      }
-    } catch (error: any) {
-      if (error) {
-        setError(error);
+        setArtists(response.albums.items);
+      } else if (searchType == "track") {
+        setArtists(response.tracks.items);
       }
     }
+
+    if (error) {
+      setError(error);
+    }
+
     setIsLoading(false);
     setSearchKey("");
   };
 
-  const handleSearchType = (event) => {
+  const handleSearchType = (event: any) => {
     setSearchType(event.target.value);
+    console.log(event.target.value);
   };
 
   if (empty) {
@@ -93,8 +86,7 @@ const SearchSection = () => {
         <select
           className="border px-4 rounded-md"
           onChange={handleSearchType}
-          name=""
-          id=""
+          value={searchType}
         >
           {searchDataType.map((type) => (
             <option key={type.name} value={type.name}>
@@ -110,20 +102,21 @@ const SearchSection = () => {
 
         <button
           className="rounded-md bg-slate-500 px-4 text-white hover:opacity-90"
-          type={"submit"}
+          type="submit"
         >
           Search
         </button>
       </form>
 
       <div>
-        <div className="grid grid-cols-6 gap-8 mt-4">
-          {artists.map((artist) => (
+        <div className="grid grid-cols-5 gap-8 mt-4">
+          {artists.map((artist: any) => (
             <ArtistsCard
               key={artist.id}
               name={artist.name}
-              followers={artist.followers.total}
-              photo={artist.items.images[1].url}
+              followers={artist.followers?.total}
+              photo={artist.images[0]?.url}
+              genre={artist.genres}
             />
           ))}
         </div>

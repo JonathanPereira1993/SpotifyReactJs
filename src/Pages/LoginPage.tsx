@@ -1,16 +1,8 @@
 import { getAuth } from "../Services/api/SpotifyService";
-import { useContext } from "react";
-import { userContext } from "../Services/context/UserContext";
 
 const LoginPage = () => {
-  const { setToken } = useContext(userContext);
-
   const getTokenFromlLocalStorage = () => {
     getAuth();
-    let localStorageValue = window.localStorage.getItem("token");
-    if (localStorageValue != "") {
-      setToken(localStorageValue);
-    }
   };
   return (
     <div className="mx-auto w-full text-center">
