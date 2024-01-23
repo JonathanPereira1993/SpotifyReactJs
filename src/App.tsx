@@ -3,7 +3,7 @@ import LoginPage from "./Pages/LoginPage";
 import SearchSection from "./Pages/SearchSection";
 
 function App() {
-  const [token, setToken] = useState<string>();
+  const [token, setToken] = useState<string | null>();
 
   useEffect(() => setToken(window.localStorage.getItem("token")), []);
 

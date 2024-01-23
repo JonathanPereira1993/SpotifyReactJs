@@ -2,9 +2,14 @@ import axios from 'axios';
 
 import { TReturnSearchCall, TSearchCall } from './types';
 
+import { tokenContext } from '../context/tokenContext';
+import { useContext, useState } from 'react';
+
 export const getAuth = async () => {
     const clientId = import.meta.env.VITE_CLIENT_ID;
     const clientSecret = import.meta.env.VITE_SECRET_KEY;
+
+    const { token, setToken } = useContext(tokenContext)
 
     axios('https://accounts.spotify.com/api/token', {
         headers: {
@@ -15,7 +20,9 @@ export const getAuth = async () => {
         method: 'POST'
     })
     .then(tokenResponse => {
-        window.localStorage.setItem('token', tokenResponse.data.access_token)
+        setToken(tokenResponse.data.access_token);
+        console.log(token)
+        // window.localStorage.setItem('token', tokenResponse.data.access_token)
         return tokenResponse.data.access_token;
     })
     
@@ -23,7 +30,7 @@ export const getAuth = async () => {
 
 export const searchCall = async (params: TSearchCall):Promise<TReturnSearchCall> => {
     let response;
-    let error;
+    let err;
 
     console.log(window.localStorage.getItem('token'))
     try {
@@ -36,8 +43,8 @@ export const searchCall = async (params: TSearchCall):Promise<TReturnSearchCall>
          response = data;
     
     } catch(error) {
-        error = error;
+        err = error;
     } finally {
-        return {response, error};
+        return {response, err};
     }
 }

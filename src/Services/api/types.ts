@@ -9,5 +9,5 @@ export type TReturnSearchCall = {
         albums:any,
         tracks:any,
     },
-    error:any
+    err:any
 }
