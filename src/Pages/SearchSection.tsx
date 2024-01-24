@@ -4,20 +4,17 @@ import { searchCall } from "../Services/api/SpotifyService";
 import ArtistsCard from "../components/ArtistsCard";
 import LoadingSpinner from "../components/LoadingSpinner";
 
-import { tokenContext } from "../Services/context/tokenContext";
-
 interface dataTypes {
   name: string;
 }
 
 const SearchSection = () => {
-  const [searchKey, setSearchKey] = useState<string>("");
+  const [searchKey, setSearchKey] = useState<string>(undefined);
   const [empty, setEmpty] = useState<boolean>(false);
   const [artists, setArtists] = useState<any>([]);
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [error, setError] = useState<boolean>();
   const [searchType, setSearchType] = useState<string>("artist");
-  const [token, setToken] = useState<string>("");
 
   const searchDataType: dataTypes[] = [
     { name: "artist" },

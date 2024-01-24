@@ -1,18 +1,20 @@
-import { useEffect, useState } from "react";
+import { useContext } from "react";
 import LoginPage from "./Pages/LoginPage";
 import SearchSection from "./Pages/SearchSection";
 
+import TokenContext from "./Services/context/tokenContext";
+
 function App() {
-  const [token, setToken] = useState<string | null>();
-
-  useEffect(() => setToken(window.localStorage.getItem("token")), []);
-
+  const { token } = useContext(TokenContext);
+  console.log("On the App", token);
   return (
-    <div className="h-screen w-screen p-6">
-      <h1 className="text-center text-6xl mb-6">Spotify API</h1>
+    <>
+      <div className="h-screen w-screen p-6">
+        <h1 className="text-center text-6xl mb-6">Spotify API</h1>
 
-      {token ? <SearchSection /> : <LoginPage />}
-    </div>
+        {token ? <SearchSection /> : <LoginPage />}
+      </div>
+    </>
   );
 }
 

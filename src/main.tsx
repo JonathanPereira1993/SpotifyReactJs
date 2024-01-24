@@ -3,12 +3,12 @@ import ReactDOM from "react-dom/client";
 import App from "./App.tsx";
 import "./index.css";
 
-import { typeContext } from "./Services/context/tokenContext.ts";
+import { TokenProvider } from "./Services/context/tokenContext";
 
 ReactDOM.createRoot(document.getElementById("root")!).render(
   <React.StrictMode>
-    <typeContext.Provider value={""}>
+    <TokenProvider>
       <App />
-    </typeContext.Provider>
+    </TokenProvider>
   </React.StrictMode>
 );

@@ -1,9 +1,14 @@
-import { getAuth } from "../Services/api/SpotifyService";
+// import { getAuth } from "../Services/api/SpotifyService";
+import { useContext } from "react";
+import TokenContext from "../Services/context/tokenContext";
 
 const LoginPage = () => {
+  const { getAuth } = useContext(TokenContext);
+
   const getTokenFromlLocalStorage = () => {
     getAuth();
   };
+
   return (
     <div className="mx-auto w-full text-center">
       <h2 className="text-3xl mb-4">Please, LogIn</h2>
