@@ -1,6 +1,7 @@
 export type TSearchCall = {
     q:string, 
     type:string
+    token: string
 }
 
 export type TReturnSearchCall = {

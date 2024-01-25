@@ -1,6 +1,6 @@
 // import { getAuth } from "../Services/api/SpotifyService";
 import { useContext } from "react";
-import TokenContext from "../Services/context/tokenContext";
+import TokenContext from "../Services/context/TokenContext";
 
 const LoginPage = () => {
   const { getAuth } = useContext(TokenContext);

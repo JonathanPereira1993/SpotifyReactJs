@@ -2,11 +2,10 @@ import { useContext } from "react";
 import LoginPage from "./Pages/LoginPage";
 import SearchSection from "./Pages/SearchSection";
 
-import TokenContext from "./Services/context/tokenContext";
+import TokenContext from "./Services/context/TokenContext";
 
 function App() {
   const { token } = useContext(TokenContext);
-  console.log("On the App", token);
   return (
     <>
       <div className="h-screen w-screen p-6">

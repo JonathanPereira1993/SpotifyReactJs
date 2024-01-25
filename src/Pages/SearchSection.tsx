@@ -1,68 +1,35 @@
-import { useEffect, useState } from "react";
-import { searchCall } from "../Services/api/SpotifyService";
+import { useContext } from "react";
 
 import ArtistsCard from "../components/ArtistsCard";
 import LoadingSpinner from "../components/LoadingSpinner";
+import SearchEngineContext from "../Services/context/SearchEngineContext";
+import TrackCard from "../components/TrackCard";
 
-interface dataTypes {
-  name: string;
-}
+// interface dataTypes {
+//   name: string;
+// }
 
 const SearchSection = () => {
-  const [searchKey, setSearchKey] = useState<string>(undefined);
-  const [empty, setEmpty] = useState<boolean>(false);
-  const [artists, setArtists] = useState<any>([]);
-  const [isLoading, setIsLoading] = useState<boolean>(false);
-  const [error, setError] = useState<boolean>();
-  const [searchType, setSearchType] = useState<string>("artist");
-
-  const searchDataType: dataTypes[] = [
-    { name: "artist" },
-    { name: "album" },
-    { name: "track" },
-  ];
-
-  useEffect(() => {
-    setSearchType(window.localStorage.getItem("SearchType"));
-  }, []);
-
-  // Search Action
-  const searchArtists = async (e: { preventDefault: () => void }) => {
-    e.preventDefault();
-    setIsLoading(true);
-
-    const { response, err } = await searchCall({
-      q: searchKey,
-      type: searchType,
-    });
-
-    window.localStorage.setItem("SearchType", searchType);
-
-    if (response) {
-      if (searchType == "artist") {
-        setArtists(response.artists.items);
-      } else if (searchType == "album") {
-        setArtists(response.albums.items);
-      } else if (searchType == "track") {
-        setArtists(response.tracks.items);
-      }
-    }
-
-    if (err.response.status == 401) {
-      setError(error);
-      window.localStorage.clear();
-    }
-
-    setIsLoading(false);
-    setSearchKey("");
-  };
-
-  const handleSearchType = (event: any) => {
-    setSearchType(event.target.value);
-  };
+  const {
+    searchKey,
+    searchType,
+    searchEngine,
+    searchDataType,
+    isLoading,
+    artists,
+    empty,
+    error,
+    setSearchKey,
+    handleSearchType,
+    setSearchType,
+  } = useContext(SearchEngineContext);
 
   if (empty) {
-    return <div>Write something to search</div>;
+    return (
+      <div className="w-screen text-red-400 text-3xl h-screen flex items-center justify-center">
+        Write something to search
+      </div>
+    );
   }
 
   if (isLoading) {
@@ -81,7 +48,7 @@ const SearchSection = () => {
     <div>
       <form
         className="w-full flex justify-center my-8 gap-4"
-        onSubmit={searchArtists}
+        onSubmit={searchEngine}
       >
         <select
           className="border px-4 rounded-md"
@@ -110,15 +77,24 @@ const SearchSection = () => {
 
       <div>
         <div className="grid grid-cols-5 gap-8 mt-4">
-          {artists.map((artist: any) => (
-            <ArtistsCard
-              key={artist.id}
-              name={artist.name}
-              followers={artist.followers?.total}
-              photo={artist.images[0]?.url}
-              genre={artist.genres}
-            />
-          ))}
+          {searchType === "track"
+            ? artists.map((track: any) => (
+                <TrackCard
+                  key={track.id}
+                  name={track.name}
+                  popularity={track.popularity}
+                  duration={track.duration_ms}
+                />
+              ))
+            : artists.map((artist: any) => (
+                <ArtistsCard
+                  key={artist.id}
+                  name={artist.name}
+                  followers={artist.followers?.total}
+                  photo={artist.images[0]?.url}
+                  genre={artist.genres}
+                />
+              ))}
         </div>
       </div>
     </div>

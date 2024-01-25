@@ -29,7 +29,7 @@ const ArtistsCard = ({ name, followers, photo, genre }: Artist) => {
     <div className="p-2 relative flex flex-col items-center justify-center border rounded shadow-md">
       <h1 className="text-3xl mb-4 mt-4">{name}</h1>
       {photo !== undefined ? (
-        <img src={photo} alt={name} className="mb-2" />
+        <img src={photo} alt={name} className="mb-2 rounded-lg shadow" />
       ) : (
         <div className="h-[200px] w-full flex items-center justify-center bg-green-200 rounded text-3xl font-bold">
           {getInitials()}
