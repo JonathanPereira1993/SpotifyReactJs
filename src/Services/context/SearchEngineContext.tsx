@@ -1,6 +1,6 @@
 import { createContext, useContext, useState, useEffect } from "react";
 import TokenContext from "./TokenContext";
-import { searchCall } from "../api/SpotifyService";
+import { searchCall, getAvailableGenres } from "../api/SpotifyService";
 
 const SearchEngineContext = createContext({});
 
@@ -17,12 +17,23 @@ export const SearchEngineProvider = ({ children }) => {
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [error, setError] = useState<boolean>();
   const [searchType, setSearchType] = useState<string>("artist");
+  const [availableGenres, setAvailableGenres] = useState([]);
 
   const searchDataType: dataTypes[] = [
     { name: "artist" },
     { name: "album" },
     { name: "track" },
   ];
+
+  const getGenresNames = async () => {
+    const { response, err } = await getAvailableGenres({
+      token: token,
+    });
+
+    if (response) {
+      setAvailableGenres(response.genres);
+    }
+  };
 
   // Search Action
   const searchEngine = async (e: { preventDefault: () => void }) => {
@@ -81,6 +92,8 @@ export const SearchEngineProvider = ({ children }) => {
         setSearchKey,
         handleSearchType,
         setSearchType,
+        getGenresNames,
+        availableGenres,
       }}
     >
       {children}

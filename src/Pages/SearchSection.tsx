@@ -1,17 +1,12 @@
-import { useContext } from "react";
+import { useContext, useEffect, useState } from "react";
 
 import ArtistsCard from "../components/ArtistsCard";
 import LoadingSpinner from "../components/LoadingSpinner";
 import SearchEngineContext from "../Services/context/SearchEngineContext";
 import TrackCard from "../components/TrackCard";
 
-// interface dataTypes {
-//   name: string;
-// }
-
 const SearchSection = () => {
   const {
-    searchKey,
     searchType,
     searchEngine,
     searchDataType,
@@ -21,8 +16,11 @@ const SearchSection = () => {
     error,
     setSearchKey,
     handleSearchType,
-    setSearchType,
+    availableGenres,
+    getGenresNames,
   } = useContext(SearchEngineContext);
+
+  const [filteredArtist, setFilteredArtist] = useState();
 
   if (empty) {
     return (
@@ -44,6 +42,17 @@ const SearchSection = () => {
     );
   }
 
+  useEffect(() => {
+    getGenresNames();
+  }, []);
+
+  const filterPerGenre = (event) => {
+    const value = event.target.value;
+    const filtered = artists.filter((artist) => artist.genres.includes(value));
+
+    setFilteredArtist(filtered);
+  };
+
   return (
     <div>
       <form
@@ -58,6 +67,18 @@ const SearchSection = () => {
           {searchDataType.map((type) => (
             <option key={type.name} value={type.name}>
               {type.name}
+            </option>
+          ))}
+        </select>
+
+        <select
+          className="border px-4 rounded-md"
+          onChange={filterPerGenre}
+          value={artists}
+        >
+          {availableGenres.map((item, i) => (
+            <option key={item.id} value={item.genres}>
+              {availableGenres[i]}
             </option>
           ))}
         </select>
@@ -86,15 +107,21 @@ const SearchSection = () => {
                   duration={track.duration_ms}
                 />
               ))
-            : artists.map((artist: any) => (
-                <ArtistsCard
-                  key={artist.id}
-                  name={artist.name}
-                  followers={artist.followers?.total}
-                  photo={artist.images[0]?.url}
-                  genre={artist.genres}
-                />
-              ))}
+            : artists
+                .filter((item) => {
+                  return filteredArtist === undefined
+                    ? item
+                    : item.genres.includes(filteredArtist);
+                })
+                .map((artist: any) => (
+                  <ArtistsCard
+                    key={artist.id}
+                    name={artist.name}
+                    followers={artist.followers?.total}
+                    photo={artist.images[0]?.url}
+                    genre={artist.genres}
+                  />
+                ))}
         </div>
       </div>
     </div>

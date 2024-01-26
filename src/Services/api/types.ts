@@ -12,3 +12,14 @@ export type TReturnSearchCall = {
     },
     err:any
 }
+
+export type TGenresCall = {
+    token: string
+}
+
+export type TReturnGenres = {
+    response: {
+        genres:any,
+    },
+    err:any
+}
