@@ -1,10 +1,4 @@
-interface Artist {
-  name: string;
-  followers?: number;
-  photo?: string;
-  genre?: [];
-}
-
+import Artist from "./types.ts";
 const ArtistsCard = ({ name, followers, photo, genre }: Artist) => {
   const getInitials = () => {
     let artistName = name;

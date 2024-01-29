@@ -1,4 +1,4 @@
-import { useContext, useEffect, useState } from "react";
+import { useContext, useEffect, useMemo, useState } from "react";
 
 import ArtistsCard from "../components/ArtistsCard";
 import LoadingSpinner from "../components/LoadingSpinner";
@@ -21,6 +21,11 @@ const SearchSection = () => {
   } = useContext(SearchEngineContext);
 
   const [filteredArtist, setFilteredArtist] = useState();
+  const [selectedGenre, setSelectedGenre] = useState("");
+
+  useEffect(() => {
+    getGenresNames();
+  }, []);
 
   if (empty) {
     return (
@@ -41,18 +46,17 @@ const SearchSection = () => {
       </div>
     );
   }
+  const filteredArtists = useMemo(() => {
+    return artists.filter((artist: any) =>
+      artist.name.toLowerCase().includes(filteredArtist.toLowerCase())
+    );
+  }, [filteredArtist, artists]);
 
-  useEffect(() => {
-    getGenresNames();
-  }, []);
-
-  const filterPerGenre = (event) => {
-    const value = event.target.value;
-    const filtered = artists.filter((artist) => artist.genres.includes(value));
-
-    setFilteredArtist(filtered);
+  const handleFilterChange = (e: any) => {
+    setFilteredArtist(e.target.value);
   };
 
+  console.log(filteredArtist);
   return (
     <div>
       <form
@@ -73,8 +77,8 @@ const SearchSection = () => {
 
         <select
           className="border px-4 rounded-md"
-          onChange={filterPerGenre}
-          value={artists}
+          onChange={handleFilterChange}
+          value={filteredArtist}
         >
           {availableGenres.map((item, i) => (
             <option key={item.id} value={item.genres}>
@@ -96,10 +100,10 @@ const SearchSection = () => {
         </button>
       </form>
 
-      <div>
+      <>
         <div className="grid grid-cols-5 gap-8 mt-4">
           {searchType === "track"
-            ? artists.map((track: any) => (
+            ? filteredArtist.map((track: any) => (
                 <TrackCard
                   key={track.id}
                   name={track.name}
@@ -123,7 +127,7 @@ const SearchSection = () => {
                   />
                 ))}
         </div>
-      </div>
+      </>
     </div>
   );
 };
