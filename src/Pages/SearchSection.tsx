@@ -21,11 +21,20 @@ const SearchSection = () => {
   } = useContext(SearchEngineContext);
 
   const [filteredArtist, setFilteredArtist] = useState();
-  const [selectedGenre, setSelectedGenre] = useState("");
 
   useEffect(() => {
     getGenresNames();
   }, []);
+
+  console.log(filteredArtist);
+
+  const filteredArtists = useMemo(() => {
+    return filteredArtist !== undefined
+      ? artists.filter((artist: any) =>
+          artist.name.toLowerCase().includes(filteredArtist.toLowerCase())
+        )
+      : artists;
+  }, [filteredArtist, artists]);
 
   if (empty) {
     return (
@@ -46,11 +55,6 @@ const SearchSection = () => {
       </div>
     );
   }
-  const filteredArtists = useMemo(() => {
-    return artists.filter((artist: any) =>
-      artist.name.toLowerCase().includes(filteredArtist.toLowerCase())
-    );
-  }, [filteredArtist, artists]);
 
   const handleFilterChange = (e: any) => {
     setFilteredArtist(e.target.value);
