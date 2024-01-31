@@ -26,8 +26,6 @@ const SearchSection = () => {
     getGenresNames();
   }, []);
 
-  console.log(filteredArtist);
-
   const filteredArtists = useMemo(() => {
     return filteredArtist !== undefined
       ? artists.filter((artist: any) =>
@@ -60,7 +58,6 @@ const SearchSection = () => {
     setFilteredArtist(e.target.value);
   };
 
-  console.log(filteredArtist);
   return (
     <div>
       <form
@@ -79,17 +76,19 @@ const SearchSection = () => {
           ))}
         </select>
 
-        <select
-          className="border px-4 rounded-md"
-          onChange={handleFilterChange}
-          value={filteredArtist}
-        >
-          {availableGenres.map((item, i) => (
-            <option key={item.id} value={item.genres}>
-              {availableGenres[i]}
-            </option>
-          ))}
-        </select>
+        {searchType === "track" || (
+          <select
+            className="border px-4 rounded-md"
+            onChange={handleFilterChange}
+            value={filteredArtist}
+          >
+            {availableGenres.map((item, i) => (
+              <option key={item.id} value={item.genres}>
+                {availableGenres[i]}
+              </option>
+            ))}
+          </select>
+        )}
         <input
           className="border rounded-md px-3 w-[300px] h-[40px]"
           type="text"
@@ -107,7 +106,7 @@ const SearchSection = () => {
       <>
         <div className="grid grid-cols-5 gap-8 mt-4">
           {searchType === "track"
-            ? filteredArtist.map((track: any) => (
+            ? artists.map((track: any) => (
                 <TrackCard
                   key={track.id}
                   name={track.name}
@@ -116,7 +115,7 @@ const SearchSection = () => {
                 />
               ))
             : artists
-                .filter((item) => {
+                .filter((item: any) => {
                   return filteredArtist === undefined
                     ? item
                     : item.genres.includes(filteredArtist);

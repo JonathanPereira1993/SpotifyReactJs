@@ -5,13 +5,16 @@ import "./index.css";
 
 import { TokenProvider } from "./Services/context/TokenContext.tsx";
 import { SearchEngineProvider } from "./Services/context/SearchEngineContext.tsx";
+import { UserProvider } from "./Services/context/UserContext.tsx";
 
 ReactDOM.createRoot(document.getElementById("root")!).render(
   <React.StrictMode>
     <TokenProvider>
-      <SearchEngineProvider>
-        <App />
-      </SearchEngineProvider>
+      <UserProvider>
+        <SearchEngineProvider>
+          <App />
+        </SearchEngineProvider>
+      </UserProvider>
     </TokenProvider>
   </React.StrictMode>
 );

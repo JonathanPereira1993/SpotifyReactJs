@@ -75,6 +75,7 @@ export const SearchEngineProvider = ({ children }) => {
   }, []);
 
   const handleSearchType = (event: any) => {
+    setArtists([]);
     setSearchType(event.target.value);
   };
 

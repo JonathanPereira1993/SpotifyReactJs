@@ -1,12 +1,15 @@
 // import { getAuth } from "../Services/api/SpotifyService";
 import { useContext } from "react";
 import TokenContext from "../Services/context/TokenContext";
+import UserContext from "../Services/context/UserContext";
 
 const LoginPage = () => {
   const { getAuth } = useContext(TokenContext);
+  const { userProfile } = useContext(UserContext);
 
   const getTokenFromlLocalStorage = () => {
     getAuth();
+    userProfile();
   };
 
   return (
