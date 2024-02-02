@@ -13,19 +13,13 @@ const convertTime = (num: number) => {
     .padStart(2, "0")}`;
 };
 
-const saveTrack = (e: any) => {
-  e.preventDefault();
-
-  console.log("saved!");
-};
-
 const TrackCard = ({ name, duration, popularity }: Track) => {
-  const { setTrackSaved } = useContext(SavedTrackContext);
+  const { saveTrackOnClick } = useContext(SavedTrackContext);
 
   return (
     <div className="p-2 relative flex flex-col items-center justify-center border rounded shadow-md">
       <div
-        onClick={saveTrack}
+        onClick={saveTrackOnClick}
         className="absolute right-2 top-2 text-xl cursor-pointer"
       >
         <LuBadgePlus />
