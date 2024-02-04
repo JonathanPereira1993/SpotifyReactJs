@@ -10,21 +10,19 @@ export const SavedTracksProvider = ({ children }) => {
   const { artists } = useContext(SearchEngineContext);
   const { token } = useContext(TokenContext);
 
-  const [trackId, setTrackId] = useState();
-
   const [trackSaved, setTrackSaved] = useState([]);
 
-  const saveTrackOnClick = async () => {
+  const saveTrackOnClick = async (trackId) => {
     try {
       const response = await axios(
-        `https://api.spotify.com/v1/me/tracks? + ${trackId}`,
+        `https://api.spotify.com/v1/me/tracks + ${trackId}`,
         {
           headers: {
-            "Content-Type": "application/json",
             Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json",
           },
           data: {
-            ids: ["string"],
+            ids: trackId,
           },
           method: "PUT",
         }
