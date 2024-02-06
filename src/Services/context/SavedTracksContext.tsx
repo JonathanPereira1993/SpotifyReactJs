@@ -24,6 +24,7 @@ export const SavedTracksProvider = ({ children }) => {
           data: {
             ids: trackId,
           },
+          
           method: "PUT",
         }
       );

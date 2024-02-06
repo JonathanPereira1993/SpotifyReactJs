@@ -24,8 +24,20 @@ export const TokenProvider = ({ children }) => {
     });
   };
 
+  const getUser = async () => {
+    axios("https://api.spotify.com/v1/me", {
+      headers: {
+        Authorization: "Bearer " + token,
+      },
+    }).then((tokenResponse) => {
+      console.log("Login!");
+      setToken(tokenResponse.data.display_name);
+      return tokenResponse.data.display_name;
+    });
+  };
+
   return (
-    <TokenContext.Provider value={{ token, getAuth }}>
+    <TokenContext.Provider value={{ token, getAuth, getUser }}>
       {children}
     </TokenContext.Provider>
   );

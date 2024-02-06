@@ -4,6 +4,7 @@ import ArtistsCard from "../components/ArtistsCard";
 import LoadingSpinner from "../components/LoadingSpinner";
 import SearchEngineContext from "../Services/context/SearchEngineContext";
 import TrackCard from "../components/TrackCard";
+import TokenContext from "../Services/context/TokenContext";
 
 const SearchSection = () => {
   const {
@@ -20,10 +21,13 @@ const SearchSection = () => {
     getGenresNames,
   } = useContext(SearchEngineContext);
 
+  const { getUser } = useContext(TokenContext);
+
   const [filteredArtist, setFilteredArtist] = useState();
 
   useEffect(() => {
     getGenresNames();
+    getUser();
   }, []);
 
   const filteredArtists = useMemo(() => {
@@ -108,6 +112,7 @@ const SearchSection = () => {
           {searchType === "track"
             ? artists.map((track: any) => (
                 <TrackCard
+                  trackId={track.id}
                   key={track.id}
                   name={track.name}
                   popularity={track.popularity}
